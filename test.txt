@@ -1,0 +1,135 @@
+Test-case 1:
+    1. start server
+    2. start client x(the table should be sent from server to x)
+    3. start client y(the table should be sent from server to x and y)
+    4. start client z(the table should be sent from server to x and y and z)
+    5. chat x -> y, y->z, ... , x ->z (All combinations)
+    6. dereg x (the table should be sent to y, z. x should receive ’ack’)
+    7. chat y->x (this should fail and message should be sent to server, and message has to be saved for x in the
+    server)
+    8. chat z->x (same as above)
+    9. reg x (messages should be sent from server to x, x’s status has to be broadcasted to all the other clients)
+    10. x, y, z : exit
+
+Output:
+    server:
+    python3 ChatApp.py -s 2000
+      server is ready
+
+    x:
+    python3 ChatApp.py -c x '' 2000 2010
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+    send y hello y
+      [Message received by y]
+    send z hello z
+      [Message received by z]
+      y: hello x
+      z: hello x
+    dereg x
+      [You are Offline. Bye.]
+    reg x
+      [Welcome Back]
+      [You have messages]
+      z: Fri Mar 18 22:09:16 2022 hello x
+      y: Fri Mar 18 22:09:22 2022 hello x
+
+
+
+    y:
+    python3 ChatApp.py -c y '' 2000 2020
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+      x: hello y
+    send x hello x
+      [Message received by x]
+    send z hello z
+      [Message received by z]
+      z: hello y
+      [client table updated.]     # dereg x
+    send x hello x
+      [Receiver is currently offline]
+      [Messages received by the server and saved]
+      [client table updated.]     # reg x
+
+    z:
+    python3 ChatApp.py -c z '' 2000 2030
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+      x: hello z
+      y: hello z
+    send x hello x
+      [Message received by x]
+    send y hello y
+      [Message received by y]
+      [client table updated.]     # dereg x
+    send x hello x
+      [Receiver is currently offline]
+      [Messages received by the server and saved]
+      [client table updated.]     # reg x
+
+Test-case 2:
+    1. start server
+    2. start client x (the table should be sent from server to x )
+    3. start client y (the table should be sent from server to x and y)
+    4. dereg y
+    5. server exit
+    6. send message x-> y (will fail with both y and server, so should make 5 attempts and exit)
+
+Output:
+    server:
+    python3 ChatApp.py -s 2000
+      server is ready
+
+    x:
+    python3 ChatApp.py -c x '' 2000 2010
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]     #dereg y
+    send y hello
+      [No ACK from y, message sent to server. ]
+      [Server not responding]
+      [Existing]
+
+    y:
+    python3 ChatApp.py -c y '' 2000 2020
+      [Welcome, You are registered.]
+      [client table updated.]
+    dereg y
+      [You are Offline. Bye.]
+
+Test-case 3:
+    1. start server
+    2. start client x (the table should be sent from server to x )
+    3. start client y (the table should be sent from server to x and y)
+    4. start client z (the table should be sent from server to x , y and z)
+    5. send group message x-> y,z
+
+    server:
+    python3 ChatApp.py -s 2000
+      server is ready
+
+    x:
+    python3 ChatApp.py -c x '' 2000 2010
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+    send_all welcome to group chat!
+      [Message received by Server.]
+
+    y:
+    python3 ChatApp.py -c y '' 2000 2020
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+      Channel-Message x welcome to group chat!      # send_all
+
+    z:
+    python3 ChatApp.py -c z '' 2000 2030
+      [Welcome, You are registered.]
+      [client table updated.]
+      [client table updated.]
+      Channel-Message x welcome to group chat!      # send_all
