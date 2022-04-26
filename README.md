@@ -11,11 +11,11 @@ Running Instructions:
   ('' is <server_ip>)
 + 3. Chat:
   send <name> <message>
-+ 4. Sign Out
++ 4. Sign Out:
   dereg <user_name>
-+ 5. Sign Back
++ 5. Sign Back:
   reg <user_name>
-+ 6. Group Chat
++ 6. Group Chat:
   send_all <message>
 
 Features:
