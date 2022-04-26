@@ -5,7 +5,7 @@ UNI: yz4131
 
 Running Instructions:
 + 1. Run Server:
-  python3 ChatApp.py -s  <portNum>
+  python3 ChatApp.py -s <portNum>
 + 2. Run Client:
   python3 ChatApp.py -c <user_name> '' <server_portNum> <client_portNum>
   ('' is <server_ip>)
