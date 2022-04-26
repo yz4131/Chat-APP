@@ -42,7 +42,6 @@ Data Structure:
 + 1. Python Dictionary
 + 2. Defaultdict from Collections
 + 3. Python List
-+ 4. Socket
 
 Known Bugs:
 + 1. If use wrong <server_portNum> or <server_ip> when running client, program will stuck
